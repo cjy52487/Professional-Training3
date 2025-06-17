@@ -487,5 +487,3 @@ web/chat-server/
 -  多对多群聊
 
 -  nginx分布式部署
-
-  
