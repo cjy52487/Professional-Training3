@@ -36,14 +36,16 @@
               trigger: 'blur',
             },
           ]"
+          class="sms-code-form-item"
         >
-          <el-input v-model="loginData.sms_code" style="max-width: 200px">
+          <el-input v-model="loginData.sms_code" style="width: 100%;">
             <template #append>
               <el-button
                 @click="sendSmsCode"
-                style="background-color: rgb(229, 132, 132); color: #ffffff"
-                >点击发送</el-button
+                style="background-color: rgb(229, 132, 132); color: #ffffff; padding: 0 15px;"
               >
+                点击发送
+              </el-button>
             </template>
           </el-input>
         </el-form-item>
@@ -245,7 +247,8 @@ export default {
   margin-left: 10px;
 }
 
-.el-alert {
-  margin-top: 20px;
+/* 修正验证码行的输入宽度与其他保持一致 */
+.sms-code-form-item .el-form-item__content {
+  max-width: 300px;
 }
 </style>
