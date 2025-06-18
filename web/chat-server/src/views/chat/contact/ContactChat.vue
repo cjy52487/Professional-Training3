@@ -331,7 +331,7 @@
                           >
                             <template #trigger>
                               <el-button
-                                style="background-color: rgb(252, 210.9, 210.9)"
+                                style="background-color: var(--global-color)"
                                 >上传图片</el-button
                               >
                             </template>
@@ -344,7 +344,7 @@
                 <template v-slot:footer>
                   <div class="updategroupinfo-modal-footer">
                     <el-button
-                      style="background-color: rgb(252, 210.9, 210.9)"
+                      style="background-color: var(--global-color)"
                       @click="closeUpdateGroupInfoModal"
                     >
                       完成
@@ -597,7 +597,7 @@
                         <div class="left-message-file-download">
                           <el-button
                             style="
-                              background-color: rgb(252, 210.9, 210.9);
+                              background-color: var(--global-color);
                               margin-top: 20px;
                             "
                             size="small"
@@ -2351,7 +2351,8 @@ export default {
 }
 
 .el-menu {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   width: 100%;
 }
 
@@ -2540,7 +2541,7 @@ h3 {
 }
 
 .right-message-content {
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
   color: rgb(74, 72, 72);
   display: inline-block;
   max-width: 400px;
@@ -2718,7 +2719,7 @@ h3 {
 }
 
 .action-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
   border: none;
   cursor: pointer;
   justify-content: center;
@@ -2755,7 +2756,7 @@ h3 {
   color: rgb(57, 57, 57);
 }
 .removegroupmembers-button {
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
 }
 
 .video-modal-overlay {
@@ -2815,6 +2816,6 @@ h3 {
 }
 
 .video-modal-footer-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
 }
 </style>

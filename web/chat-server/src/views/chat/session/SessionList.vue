@@ -383,7 +383,7 @@ export default {
 }
 
 .el-menu {
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
   width: 100%;
 }
 

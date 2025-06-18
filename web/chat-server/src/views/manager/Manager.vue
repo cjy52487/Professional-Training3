@@ -296,7 +296,7 @@ export default {
 .header-container {
   height: 70px;
   border-bottom: 3px solid #ccc;
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
   border-top-right-radius: 30px;
   border-top-left-radius: 30px;
   display: flex;
@@ -307,7 +307,7 @@ export default {
 
 .el-menu {
   width: 196px;
-  background-color: rgb(252, 210.9, 210.9);
+  background-color: var(--global-color);
 }
 
 .el-menu-item {

@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="edit-window">
-          <el-button class="edit-btn" @click="showMyInfoModal">编辑</el-button>
+          <el-button style="background-color: var(--global-color)" @click="showMyInfoModal">编辑</el-button>
         </div>
         <Modal :isVisible="isMyInfoModalVisible">
           <template v-slot:header>
@@ -103,7 +103,7 @@
                     >
                       <template #trigger>
                         <el-button
-                          style="background-color: rgb(252, 210.9, 210.9)"
+                          style="background-color: var()"
                           >上传图片</el-button
                         >
                       </template>
@@ -376,7 +376,8 @@ h2 {
 }
 
 .el-menu {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   width: 101%;
 }
 

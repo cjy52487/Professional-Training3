@@ -73,7 +73,7 @@
             <template #append>
               <el-button
                 @click="sendSmsCode"
-                style="background-color: rgb(229, 132, 132); color: #ffffff"
+                style="background-color: var(--global-color); color: #ffffff"
                 >点击发送</el-button
               >
             </template>
@@ -267,7 +267,8 @@ export default {
 
 .register-btn,
 .register-btn:hover {
-  background-color: rgb(229, 132, 132);
+  /* background-color: rgb(229, 132, 132); */
+  background-color: var(--global-color);
   border: none;
   color: #ffffff;
   font-weight: bold;
@@ -288,7 +289,8 @@ export default {
   background-color: rgba(255, 255, 255, 0);
   border: none;
   cursor: pointer;
-  color: #d65b54;
+  /* color: #d65b54; */
+  color:var(--global-color);
   font-weight: bold;
   text-decoration: underline;
   text-underline-offset: 0.2em;

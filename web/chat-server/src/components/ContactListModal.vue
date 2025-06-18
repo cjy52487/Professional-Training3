@@ -898,7 +898,8 @@ export default {
 }
 
 .create-group-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   cursor: pointer;
   border: none;
   height: 100%;
@@ -909,14 +910,14 @@ export default {
   align-items: center;
   border-radius: 10px;
 }
-
 .create-group-icon {
   width: 15px;
   height: 15px;
 }
 
 .el-menu {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   width: 101%;
 }
 
@@ -926,6 +927,7 @@ export default {
 }
 
 .contactlist-user-title {
+
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -1045,7 +1047,8 @@ h3 {
 }
 
 .action-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   border: none;
   cursor: pointer;
   justify-content: center;

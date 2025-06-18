@@ -11,8 +11,12 @@ export default createStore({
     // signalUrl: 'wss://127.0.0.1:8001',
     userInfo: (sessionStorage.getItem('userInfo') && JSON.parse(sessionStorage.getItem('userInfo'))) || {},
     socket: null,
+    // 全局颜色变量 - 固定RGB值
+    globalColor: 'rgb(237, 210, 240)',
   },
   getters: {
+    // 获取全局颜色
+    getGlobalColor: (state) => state.globalColor,
   },
   mutations: {
     setUserInfo(state, userInfo) {
@@ -22,10 +26,31 @@ export default createStore({
     cleanUserInfo(state) {
       state.userInfo = {};
       sessionStorage.removeItem('userInfo');
-    }
+    },
+    // 设置全局颜色 - 固定RGB值
+    // setGlobalColor(state, rgbColor) {
+    //   // 验证RGB格式
+    //   if (rgbColor.startsWith('rgb(') && rgbColor.endsWith(')')) {
+    //     state.globalColor = rgbColor;
+    //     // 更新CSS变量
+    //     document.documentElement.style.setProperty('--global-color', rgbColor);
+    //   } else {
+    //     console.warn('颜色格式必须是RGB格式，例如: rgb(229, 132, 132)');
+    //   }
+    // }
   },
   actions: {
+    // 初始化全局颜色（在应用启动时调用）
+    initGlobalColor({ commit, state }) {
+      // 将store中的颜色应用到CSS变量
+      document.documentElement.style.setProperty('--global-color', state.globalColor);
+    }
   },
   modules: {
+  },
+  computed:{
+    globalColor(){
+      return this.$store.getters.getGlobalColor
+    }
   }
 })

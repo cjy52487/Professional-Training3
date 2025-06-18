@@ -656,7 +656,8 @@ export default {
 }
 
 .create-group-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   cursor: pointer;
   border: none;
   height: 100%;
@@ -674,7 +675,8 @@ export default {
 }
 
 .el-menu {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   width: 101%;
 }
 
@@ -786,7 +788,8 @@ h3 {
 }
 
 .action-btn {
-  background-color: rgb(252, 210.9, 210.9);
+  /* background-color: rgb(252, 210.9, 210.9); */
+  background-color: var(--global-color);
   border: none;
   cursor: pointer;
   justify-content: center;

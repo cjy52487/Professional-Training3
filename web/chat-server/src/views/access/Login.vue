@@ -80,11 +80,31 @@ export default {
           ElMessage.error("请输入有效的手机号码。");
           return;
         }
-	console.log(store.state.backendUrl, store.state.wsUrl);
-        const response = await axios.post(
-          store.state.backendUrl + "/login",
-          data.loginData
-        );
+        console.log(store.state.backendUrl, store.state.wsUrl);
+        
+        // 临时模拟接口响应 - 用于测试
+        const mockResponse = {
+          data: {
+            code: 200,
+            message: "登录成功",
+            data: {
+              uuid: "mock-user-" + Date.now(),
+              user_name: "测试用户",
+              telephone: data.loginData.telephone,
+              avatar: "https://via.placeholder.com/40x40",
+              status: 0, // 0表示正常状态
+              email: "test@example.com"
+            }
+          }
+        };
+        
+        // 注释掉真实接口调用，使用模拟数据
+        // const response = await axios.post(
+        //   store.state.backendUrl + "/login",
+        //   data.loginData
+        // );
+        
+        const response = mockResponse;
         console.log(response);
         if (response.data.code == 200) {
           if (response.data.data.status == 1) {
@@ -115,7 +135,7 @@ export default {
             store.state.socket.onerror = () => {
               console.log("WebSocket连接发生错误");
             };
-            router.push("/chat/sessionlist");
+            router.push("/chat/sessionList");
           } catch (error) {
             console.log(error);
           }
@@ -183,7 +203,8 @@ export default {
 
 .login-btn,
 .login-btn:hover {
-  background-color: rgb(229, 132, 132);
+  /* background-color: rgb(225, 167, 234); */
+  background-color: var(--global-color);
   border: none;
   color: #ffffff;
   font-weight: bold;
@@ -200,7 +221,8 @@ export default {
   background-color: rgba(255, 255, 255, 0);
   border: none;
   cursor: pointer;
-  color: #d65b54;
+  /* color: #d65b54; */
+  color:var(--global-color);
   font-weight: bold;
   text-decoration: underline;
   text-underline-offset: 0.2em;
