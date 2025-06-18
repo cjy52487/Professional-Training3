@@ -3,7 +3,7 @@
     <div
       class="chat-window"
       :style="{
-        boxShadow: `var(${'--el-box-shadow-dark'})`,
+        boxShadow: `var(--el-box-shadow-dark)`,
       }"
     >
       <el-container class="chat-window-container">
@@ -11,29 +11,73 @@
           <NavigationModal></NavigationModal>
           <ContactListModal></ContactListModal>
         </el-aside>
+
         <div class="owner-info-window">
           <div class="my-homepage-title"><h2>我的主页</h2></div>
 
-          <p class="owner-prefix">用户id：{{ userInfo.uuid }}</p>
-          <p class="owner-prefix">昵称：{{ userInfo.nickname }}</p>
-          <p class="owner-prefix">电话：{{ userInfo.telephone }}</p>
-          <p class="owner-prefix">邮箱：{{ userInfo.email }}</p>
-          <p class="owner-prefix">
-            性别：{{ userInfo.gender === 0 ? "男" : "女" }}
-          </p>
-          <p class="owner-prefix">生日：{{ userInfo.birthday }}</p>
-          <p class="owner-prefix">个性签名：{{ userInfo.signature }}</p>
-          <p class="owner-prefix">
-            加入kama chat server的时间：{{ userInfo.created_at }}
-          </p>
-          <div class="owner-opt">
-            <p class="owner-prefix">头像：</p>
-            <img style="width: 40px; height: 40px" :src="userInfo.avatar" />
+          <div class="item-row">
+            <p class="owner-prefix">用户id：</p>
+            <p>{{ userInfo.uuid }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">昵称：</p>
+            <p>{{ userInfo.nickname }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">电话：</p>
+            <p>{{ userInfo.telephone }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">邮箱：</p>
+            <p>{{ userInfo.email }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">性别：</p>
+            <p>
+              {{
+                userInfo.gender === 0
+                  ? "男"
+                  : userInfo.gender === 1
+                  ? "女"
+                  : "未设置"
+              }}
+            </p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">生日：</p>
+            <p>{{ userInfo.birthday }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">个性签名：</p>
+            <p>{{ userInfo.signature }}</p>
+          </div>
+
+          <div class="item-row">
+            <p class="owner-prefix">加入ComeChat的时间：</p>
+            <p>{{ userInfo.created_at }}</p>
+          </div>
+
+          <div class="owner-opt item-row">
+            <p class="owner-prefix" style="margin-right: 10px;">头像：</p>
+            <img
+              style="width: 40px; height: 40px; border-radius: 4px"
+              :src="userInfo.avatar || defaultAvatar"
+              alt="头像"
+              @error="handleImgError"
+            />
           </div>
         </div>
+
         <div class="edit-window">
-          <el-button style="background-color: var(--global-color)" @click="showMyInfoModal">编辑</el-button>
+          <el-button class="edit-btn" style="background-color: var(--global-color)" @click="showMyInfoModal">编辑</el-button>
         </div>
+
         <Modal :isVisible="isMyInfoModalVisible">
           <template v-slot:header>
             <div class="modal-header">
@@ -72,25 +116,16 @@
                       },
                     ]"
                   >
-                    <el-input
-                      v-model="updateInfo.nickname"
-                      placeholder="选填"
-                    />
+                    <el-input v-model="updateInfo.nickname" placeholder="选填" />
                   </el-form-item>
                   <el-form-item prop="email" label="邮箱">
                     <el-input v-model="updateInfo.email" placeholder="选填" />
                   </el-form-item>
                   <el-form-item prop="birthday" label="生日">
-                    <el-input
-                      v-model="updateInfo.birthday"
-                      placeholder="选填，格式为2024.1.1"
-                    />
+                    <el-input v-model="updateInfo.birthday" placeholder="选填，格式为2024.1.1" />
                   </el-form-item>
                   <el-form-item prop="signature" label="个性签名">
-                    <el-input
-                      v-model="updateInfo.signature"
-                      placeholder="选填"
-                    />
+                    <el-input v-model="updateInfo.signature" placeholder="选填" />
                   </el-form-item>
                   <el-form-item prop="avatar" label="头像">
                     <el-upload
@@ -102,10 +137,7 @@
                       :before-upload="beforeFileUpload"
                     >
                       <template #trigger>
-                        <el-button
-                          style="background-color: var()"
-                          >上传图片</el-button
-                        >
+                        <el-button style="background-color: var(--global-color)">上传图片</el-button>
                       </template>
                     </el-upload>
                   </el-form-item>
@@ -127,158 +159,100 @@
 </template>
 
 <script>
-import { reactive, toRefs, onMounted, ref } from "vue";
+import { reactive, toRefs, ref } from "vue";
 import { useStore } from "vuex";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import Modal from "@/components/Modal.vue";
-import { checkEmailValid } from "@/assets/js/valid.js";
-import { generateString } from "@/assets/js/random.js";
-import SmallModal from "@/components/SmallModal.vue";
 import NavigationModal from "@/components/NavigationModal.vue";
 import ContactListModal from "@/components/ContactListModal.vue";
-import { ElMessage } from "element-plus";
+import defaultAvatar from "@/assets/default-avatar.png";
+import { Close } from "@element-plus/icons-vue";
+
 export default {
   name: "OwnInfo",
   components: {
     Modal,
-    SmallModal,
     ContactListModal,
     NavigationModal,
+    Close,
   },
   setup() {
     const router = useRouter();
     const store = useStore();
-    const data = reactive({
-      userInfo: store.state.userInfo,
-      updateInfo: {
-        uuid: "",
-        nickname: "",
-        email: "",
-        birthday: "",
-        signature: "",
-        avatar: "",
-      },
-      isMyInfoModalVisible: false,
-      ownListReq: {
-        owner_id: "",
-      },
-      uploadRef: null,
-      uploadPath: store.state.backendUrl + "/message/uploadAvatar",
-      fileList: [],
-      cnt: 0,
+
+    const userInfo = reactive(store.state.userInfo);
+
+    // 编辑表单数据
+    const updateInfo = reactive({
+      nickname: userInfo.nickname || "",
+      email: userInfo.email || "",
+      birthday: userInfo.birthday || "",
+      signature: userInfo.signature || "",
+      avatar: userInfo.avatar || "",
     });
-    const showMyInfoModal = () => {
-      data.isMyInfoModalVisible = true;
-    };
-    const closeMyInfoModal = async () => {
-      console.log(data.fileList);
-      if (
-        data.updateInfo.nickname == "" &&
-        data.fileList.length == 0 &&
-        data.updateInfo.email == "" &&
-        data.updateInfo.birthday == "" &&
-        data.updateInfo.signature == ""
-      ) {
-        ElMessage("请至少修改一项");
-        return;
-      }
-      if (data.updateInfo.nickname != "") {
-        if (
-          data.updateInfo.nickname.length < 3 ||
-          data.updateInfo.nickname.length > 10
-        ) {
-          return;
-        }
-      }
-      if (data.updateInfo.email != "") {
-        if (!checkEmailValid(data.updateInfo.email)) {
-          ElMessage("请输入有效的邮箱。");
-          return;
-        }
-      }
-      if (data.updateInfo.nickname != "") {
-        data.userInfo.nickname = data.updateInfo.nickname;
-      }
-      if (data.updateInfo.email != "") {
-        data.userInfo.email = data.updateInfo.email;
-      }
-      if (data.fileList.length != 0) {
-        try {
-          data.updateInfo.avatar = "/static/avatars/" + data.fileList[0].name;
-          console.log(data.updateInfo.avatar);
-          data.userInfo.avatar = store.state.backendUrl + data.updateInfo.avatar;
-          store.commit("setUserInfo", data.userInfo);
-          data.uploadRef.submit();
-        } catch (error) {
-          console.log(error);
-        }
-      }
 
-      if (data.updateInfo.birthday != "") {
-        data.userInfo.birthday = data.updateInfo.birthday;
-      }
-      if (data.updateInfo.signature != "") {
-        data.userInfo.signature = data.updateInfo.signature;
-      }
-      data.isMyInfoModalVisible = false;
-      data.fileList = [];
-      data.cnt = 0;
-      data.updateInfo.uuid = data.userInfo.uuid;
-      store.commit("setUserInfo", data.userInfo);
-      try {
-        const rsp = await axios.post(
-          store.state.backendUrl + "/user/updateUserInfo",
-          data.updateInfo
-        );
-        console.log(rsp);
-        if (rsp.data.code == 200) {
-          ElMessage.success(rsp.data.message);
-        } else if (rsp.data.code == 400) {
-          ElMessage.error(rsp.data.message);
-        } else if (rsp.data.code == 500) {
-          ElMessage.error(rsp.data.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      router.go(0);
-    };
-    const quitMyInfoModal = () => {
-      data.isMyInfoModalVisible = false;
-      data.fileList = [];
-      data.cnt = 0;
-    };
-    const handleUploadSuccess = () => {
-      ElMessage.success("头像上传成功");
-      data.fileList = [];
-    };
-    const beforeFileUpload = (file) => {
-      console.log("上传前file====>", file);
-      console.log(data.fileList);
-      console.log(file);
-      if (data.fileList.length > 1) {
-        ElMessage.error("只能上传一张头像");
-        return false;
-      }
-      const isLt50M = file.size / 1024 / 1024 < 50;
-      if (!isLt50M) {
-        ElMessage.error("上传头像图片大小不能超过 50MB!");
-        return false;
-      }
-    };
-    const getFileExtension = (filename) => {
-      const parts = filename.split(".");
-      return parts.length > 1 ? parts.pop() : "";
-    };
+    // 弹窗显示状态
+    const isMyInfoModalVisible = ref(false);
 
-    
+    // 上传文件列表
+    const fileList = ref([]);
+
+    // 上传接口地址（示例）
+    const uploadPath = "/api/upload";
+
+    // 打开弹窗时同步数据
+    function showMyInfoModal() {
+      isMyInfoModalVisible.value = true;
+      Object.assign(updateInfo, userInfo);
+      fileList.value = [];
+    }
+
+    // 关闭弹窗（完成）
+    function closeMyInfoModal() {
+      // TODO: 这里可以调用接口，提交修改的数据
+      // 提交后同步 userInfo
+      Object.assign(userInfo, updateInfo);
+      isMyInfoModalVisible.value = false;
+    }
+
+    // 点击弹窗右上角关闭
+    function quitMyInfoModal() {
+      isMyInfoModalVisible.value = false;
+    }
+
+    // 图片加载失败，替换默认头像
+    function handleImgError(event) {
+      event.target.src = defaultAvatar;
+    }
+
+    // 上传成功回调
+    function handleUploadSuccess(response, file, fileListArg) {
+      console.log("上传成功", response);
+      // 这里可以根据接口返回，更新 updateInfo.avatar
+      // 示例:
+      // updateInfo.avatar = response.url;
+    }
+
+    // 上传前校验文件类型
+    function beforeFileUpload(file) {
+      const isImage = file.type.startsWith("image/");
+      if (!isImage) {
+        alert("只能上传图片文件");
+      }
+      return isImage;
+    }
+
     return {
-      ...toRefs(data),
       router,
+      userInfo,
+      updateInfo,
+      isMyInfoModalVisible,
+      fileList,
+      uploadPath,
       showMyInfoModal,
       closeMyInfoModal,
       quitMyInfoModal,
+      handleImgError,
       handleUploadSuccess,
       beforeFileUpload,
     };
@@ -289,100 +263,59 @@ export default {
 <style scoped>
 .owner-info-window {
   width: 84%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 10px;
+  font-size: 13px;
+  color: #333;
+}
+.my-homepage-title {
+  text-align: center;
+  width: 100%;
+}
+
+.my-homepage-title h2 {
+  margin-bottom: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.item-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background-color: #fff;
+  box-sizing: border-box;
 }
 
 .owner-prefix {
+  min-width: 140px;
   font-family: Arial, Helvetica, sans-serif;
-  margin: 6px;
+  font-weight: 450;
+  color: #333;
 }
 
 .owner-opt {
-  margin: 6px;
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.edit-btn {
+  height: 36px;
+  line-height: 40px;
+  font-size: 14px;
+  padding: 0 17px;
 }
 
 .edit-window {
   width: 10%;
   display: flex;
   flex-direction: column-reverse;
-}
-
-h3 {
-  font-family: Arial, Helvetica, sans-serif;
-  color: rgb(69, 69, 68);
-}
-
-.modal-quit-btn-container {
-  height: 30%;
-  width: 100%;
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.modal-quit-btn {
-  background-color: rgba(255, 255, 255, 0);
-  color: rgb(229, 25, 25);
-  padding: 15px;
-  border: none;
-  cursor: pointer;
-  position: fixed;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-header {
-  height: 20%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-body {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-footer {
-  height: 20%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-header-title {
-  height: 70%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-h2 {
-  margin-bottom: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.el-menu {
-  /* background-color: rgb(252, 210.9, 210.9); */
-  background-color: var(--global-color);
-  width: 101%;
-}
-
-.el-menu-item {
-  background-color: rgb(255, 255, 255);
-  height: 45px;
 }
 </style>

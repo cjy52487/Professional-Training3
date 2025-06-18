@@ -68,14 +68,16 @@
               trigger: 'blur',
             },
           ]"
+          class="sms-code-form-item"
         >
-          <el-input v-model="registerData.sms_code" style="max-width: 200px">
+          <el-input v-model="registerData.sms_code" style="width: 100%;">
             <template #append>
               <el-button
                 @click="sendSmsCode"
-                style="background-color: var(--global-color); color: #ffffff"
-                >点击发送</el-button
+                style="background-color: var(--global-color); color: #ffffff; padding: 0 15px;"
               >
+                点击发送
+              </el-button>
             </template>
           </el-input>
         </el-form-item>
@@ -141,20 +143,16 @@ export default {
         const response = await axios.post(
           store.state.backendUrl + "/register",
           data.registerData
-        ); // 发送POST请求
+        );
         if (response.data.code == 200) {
           ElMessage.success(response.data.message);
-          console.log(response.data.message);
-          // 查看avatar前缀有没有http
           if (!response.data.data.avatar.startsWith("http")) {
             response.data.data.avatar =
               store.state.backendUrl + response.data.data.avatar;
           }
           store.commit("setUserInfo", response.data.data);
-          // 准备创建websocket连接
           const wsUrl =
             store.state.wsUrl + "/wss?client_id=" + response.data.data.uuid;
-          console.log(wsUrl);
           store.state.socket = new WebSocket(wsUrl);
           store.state.socket.onopen = () => {
             console.log("WebSocket连接已打开");
@@ -171,11 +169,9 @@ export default {
           router.push("/chat/sessionlist");
         } else {
           ElMessage.error(response.data.message);
-          console.log(response.data.message);
         }
       } catch (error) {
         ElMessage.error(error);
-        console.log(error);
       }
     };
     const checkTelephoneValid = () => {
@@ -211,7 +207,6 @@ export default {
         store.state.backendUrl + "/user/sendSmsCode",
         req
       );
-      console.log(rsp);
       if (rsp.data.code == 200) {
         ElMessage.success(rsp.data.message);
       } else if (rsp.data.code == 400) {
@@ -243,6 +238,7 @@ export default {
 }
 
 .register-window {
+  width: 400px;
   background-color: rgb(255, 255, 255, 0.7);
   position: fixed;
   top: 50%;
@@ -260,8 +256,8 @@ export default {
 
 .register-button-container {
   display: flex;
-  justify-content: center; /* 水平居中 */
-  margin-top: 20px; /* 可选，根据需要调整按钮与输入框之间的间距 */
+  justify-content: center;
+  margin-top: 20px;
   width: 100%;
 }
 
@@ -295,5 +291,10 @@ export default {
   text-decoration: underline;
   text-underline-offset: 0.2em;
   margin-left: 10px;
+}
+
+/* 修正验证码行的输入宽度与其他保持一致 */
+.sms-code-form-item .el-form-item__content {
+  max-width: 300px;
 }
 </style>

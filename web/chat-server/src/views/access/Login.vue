@@ -178,6 +178,7 @@ export default {
 }
 
 .login-window {
+  width: 400px;
   background-color: rgb(255, 255, 255, 0.7);
   position: fixed;
   top: 50%;
