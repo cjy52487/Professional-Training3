@@ -1038,7 +1038,13 @@ export default {
       isAVContainerModalVisible: false,
       videoPlayer: null,
       rtcPeerConn: null,
-      ICE_CFG: {},
+      ICE_CFG: {   iceServers: [
+      {
+        urls: "turn:47.111.3.71:3478",
+        username: "xfish",
+        credential: "qwertyuiop0112",
+      },
+    ],},
       localStream: null,
       remoteStream: null,
       remoteVideo: null,
