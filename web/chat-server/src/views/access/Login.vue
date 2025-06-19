@@ -204,8 +204,8 @@ export default {
 
 .login-btn,
 .login-btn:hover {
-  /* background-color: rgb(225, 167, 234); */
-  background-color: var(--global-color);
+  background-color: rgb(237, 194, 243);
+  /* background-color: var(--global-color); */
   border: none;
   color: #ffffff;
   font-weight: bold;

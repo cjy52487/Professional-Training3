@@ -12,7 +12,7 @@ export default createStore({
     userInfo: (sessionStorage.getItem('userInfo') && JSON.parse(sessionStorage.getItem('userInfo'))) || {},
     socket: null,
     // 全局颜色变量 - 固定RGB值
-    globalColor: 'rgb(237, 210, 240)',
+    globalColor: 'rgb(246, 229, 247)',
   },
   getters: {
     // 获取全局颜色
