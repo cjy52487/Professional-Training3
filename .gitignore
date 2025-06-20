@@ -38,3 +38,4 @@ internal/service/kafka/start.bat
 *.sh
 
 *.ext
+"cmd/kama_chat_server/your log path/" 
