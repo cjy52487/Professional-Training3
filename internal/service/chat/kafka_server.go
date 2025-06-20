@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-redis/redis/v8"
-	"github.com/gorilla/websocket"
 	"kama_chat_server/internal/dao"
 	"kama_chat_server/internal/dto/request"
 	"kama_chat_server/internal/dto/respond"
@@ -21,6 +19,9 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/gorilla/websocket"
 )
 
 type KafkaServer struct {
@@ -104,6 +105,7 @@ func (k *KafkaServer) Start() {
 					// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
 					// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 					messageRsp := respond.GetMessageListRespond{
+						SessionId:  message.SessionId,
 						SendId:     message.SendId,
 						SendName:   message.SendName,
 						SendAvatar: chatMessageReq.SendAvatar,
@@ -162,6 +164,7 @@ func (k *KafkaServer) Start() {
 
 				} else if message.ReceiveId[0] == 'G' { // 发送给Group
 					messageRsp := respond.GetGroupMessageListRespond{
+						SessionId:  message.SessionId,
 						SendId:     message.SendId,
 						SendName:   message.SendName,
 						SendAvatar: chatMessageReq.SendAvatar,
@@ -255,6 +258,7 @@ func (k *KafkaServer) Start() {
 					// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
 					// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 					messageRsp := respond.GetMessageListRespond{
+						SessionId:  message.SessionId,
 						SendId:     message.SendId,
 						SendName:   message.SendName,
 						SendAvatar: chatMessageReq.SendAvatar,
@@ -312,6 +316,7 @@ func (k *KafkaServer) Start() {
 					}
 				} else {
 					messageRsp := respond.GetGroupMessageListRespond{
+						SessionId:  message.SessionId,
 						SendId:     message.SendId,
 						SendName:   message.SendName,
 						SendAvatar: chatMessageReq.SendAvatar,
@@ -413,6 +418,7 @@ func (k *KafkaServer) Start() {
 					// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
 					// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 					messageRsp := respond.AVMessageRespond{
+						SessionId:  message.SessionId,
 						SendId:     message.SendId,
 						SendName:   message.SendName,
 						SendAvatar: message.SendAvatar,

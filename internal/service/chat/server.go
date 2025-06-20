@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-redis/redis/v8"
-	"github.com/gorilla/websocket"
 	"kama_chat_server/internal/dao"
 	"kama_chat_server/internal/dto/request"
 	"kama_chat_server/internal/dto/respond"
@@ -20,6 +18,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/gorilla/websocket"
 )
 
 type Server struct {
@@ -123,10 +124,8 @@ func (s *Server) Start() {
 						zlog.Error(res.Error.Error())
 					}
 					if message.ReceiveId[0] == 'U' { // 发送给User
-						// 如果能找到ReceiveId，说明在线，可以发送，否则存表后跳过
-						// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
-						// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 						messageRsp := respond.GetMessageListRespond{
+							SessionId:  message.SessionId, // 新增
 							SendId:     message.SendId,
 							SendName:   message.SendName,
 							SendAvatar: chatMessageReq.SendAvatar,
@@ -150,13 +149,8 @@ func (s *Server) Start() {
 						}
 						s.mutex.Lock()
 						if receiveClient, ok := s.Clients[message.ReceiveId]; ok {
-							//messageBack.Message = jsonMessage
-							//messageBack.Uuid = message.Uuid
 							receiveClient.SendBack <- messageBack // 向client.Send发送
 						}
-						// 因为send_id肯定在线，所以这里在后端进行在线回显message，其实优化的话前端可以直接回显
-						// 问题在于前后端的req和rsp结构不同，前端存储message的messageList不能存req，只能存rsp
-						// 所以这里后端进行回显，前端不回显
 						sendClient := s.Clients[message.SendId]
 						sendClient.SendBack <- messageBack
 						s.mutex.Unlock()
@@ -185,6 +179,7 @@ func (s *Server) Start() {
 
 					} else if message.ReceiveId[0] == 'G' { // 发送给Group
 						messageRsp := respond.GetGroupMessageListRespond{
+							SessionId:  message.SessionId, // 新增
 							SendId:     message.SendId,
 							SendName:   message.SendName,
 							SendAvatar: chatMessageReq.SendAvatar,
@@ -274,10 +269,8 @@ func (s *Server) Start() {
 						zlog.Error(res.Error.Error())
 					}
 					if message.ReceiveId[0] == 'U' { // 发送给User
-						// 如果能找到ReceiveId，说明在线，可以发送，否则存表后跳过
-						// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
-						// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 						messageRsp := respond.GetMessageListRespond{
+							SessionId:  message.SessionId, // 新增
 							SendId:     message.SendId,
 							SendName:   message.SendName,
 							SendAvatar: chatMessageReq.SendAvatar,
@@ -301,13 +294,8 @@ func (s *Server) Start() {
 						}
 						s.mutex.Lock()
 						if receiveClient, ok := s.Clients[message.ReceiveId]; ok {
-							//messageBack.Message = jsonMessage
-							//messageBack.Uuid = message.Uuid
 							receiveClient.SendBack <- messageBack // 向client.Send发送
 						}
-						// 因为send_id肯定在线，所以这里在后端进行在线回显message，其实优化的话前端可以直接回显
-						// 问题在于前后端的req和rsp结构不同，前端存储message的messageList不能存req，只能存rsp
-						// 所以这里后端进行回显，前端不回显
 						sendClient := s.Clients[message.SendId]
 						sendClient.SendBack <- messageBack
 						s.mutex.Unlock()
@@ -335,6 +323,7 @@ func (s *Server) Start() {
 						}
 					} else {
 						messageRsp := respond.GetGroupMessageListRespond{
+							SessionId:  message.SessionId, // 新增
 							SendId:     message.SendId,
 							SendName:   message.SendName,
 							SendAvatar: chatMessageReq.SendAvatar,
@@ -432,10 +421,8 @@ func (s *Server) Start() {
 					}
 
 					if chatMessageReq.ReceiveId[0] == 'U' { // 发送给User
-						// 如果能找到ReceiveId，说明在线，可以发送，否则存表后跳过
-						// 因为在线的时候是通过websocket更新消息记录的，离线后通过存表，登录时只调用一次数据库操作
-						// 切换chat对象后，前端的messageList也会改变，获取messageList从第二次就是从redis中获取
 						messageRsp := respond.AVMessageRespond{
+							SessionId:  message.SessionId, // 新增
 							SendId:     message.SendId,
 							SendName:   message.SendName,
 							SendAvatar: message.SendAvatar,
@@ -453,7 +440,6 @@ func (s *Server) Start() {
 						if err != nil {
 							zlog.Error(err.Error())
 						}
-						// log.Println("返回的消息为：", messageRsp, "序列化后为：", jsonMessage)
 						log.Println("返回的消息为：", messageRsp)
 						var messageBack = &MessageBack{
 							Message: jsonMessage,
@@ -461,8 +447,6 @@ func (s *Server) Start() {
 						}
 						s.mutex.Lock()
 						if receiveClient, ok := s.Clients[message.ReceiveId]; ok {
-							//messageBack.Message = jsonMessage
-							//messageBack.Uuid = message.Uuid
 							receiveClient.SendBack <- messageBack // 向client.Send发送
 						}
 						// 通话这不能回显，发回去的话就会出现两个start_call。
