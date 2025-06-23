@@ -179,7 +179,7 @@ export default {
 
 .login-window {
   width: 400px;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgb(255, 255, 255,0.8);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -204,7 +204,7 @@ export default {
 
 .login-btn,
 .login-btn:hover {
-  background-color: rgb(237, 194, 243);
+  background-color: rgb(172,216,245);
   /* background-color: var(--global-color); */
   border: none;
   color: #ffffff;
@@ -233,4 +233,5 @@ export default {
 .el-alert {
   margin-top: 20px;
 }
+
 </style>
