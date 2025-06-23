@@ -2563,7 +2563,7 @@ h3 {
   font-weight: bold;
   margin-top: 5px;
   margin-right: 10px;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .right-message-contactname {
@@ -2572,21 +2572,21 @@ h3 {
   font-weight: bold;
   margin-top: 5px;
   margin-left: 10px;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .left-message-time {
   font-family: Arial, Helvetica, sans-serif;
   color:var(--global-color);
   margin-top: 5px;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .right-message-time {
   font-family: Arial, Helvetica, sans-serif;
   color: var(--global-color);
   margin-top: 5px;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .left-message-content {
