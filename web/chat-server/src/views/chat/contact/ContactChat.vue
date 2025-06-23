@@ -2497,7 +2497,7 @@ h3 {
   width: 50%;
   height: 100%;
   margin-right: 10px;
-  color: rgb(201, 139, 139);
+  color: var(--global-color);
 }
 
 .sessionlist-avatar {
@@ -2510,7 +2510,7 @@ h3 {
   background-color: rgba(255, 255, 255, 0);
   border: none;
   cursor: pointer;
-  color: rgb(201, 139, 139);
+  color: var(--global-color);
 }
 
 .modal-list {
@@ -2559,7 +2559,7 @@ h3 {
 
 .left-message-contactname {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(77, 61, 192);
+  color: rgb(47, 45, 45);
   font-weight: bold;
   margin-top: 5px;
   margin-right: 10px;
@@ -2568,7 +2568,7 @@ h3 {
 
 .right-message-contactname {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(77, 61, 192);
+  color: rgb(47, 45, 45);
   font-weight: bold;
   margin-top: 5px;
   margin-left: 10px;
@@ -2577,20 +2577,20 @@ h3 {
 
 .left-message-time {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(237, 161, 161);
+  color:var(--global-color);
   margin-top: 5px;
   font-size: 15px;
 }
 
 .right-message-time {
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(237, 161, 161);
+  color: var(--global-color);
   margin-top: 5px;
   font-size: 15px;
 }
 
 .left-message-content {
-  background-color: rgb(239, 255, 174);
+  background-color: rgb(221, 215, 215);
   color: rgb(74, 72, 72);
   display: inline-block;
   max-width: 400px;
@@ -2599,7 +2599,7 @@ h3 {
   border-radius: 6px;
   padding: 3px;
   padding-right: 5px;
-  font-size: 14px;
+  font-size: 16px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -2613,7 +2613,7 @@ h3 {
   border-radius: 6px;
   padding: 3px;
   padding-right: 5px;
-  font-size: 14px;
+  font-size: 16px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
