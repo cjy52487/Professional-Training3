@@ -828,7 +828,7 @@
                   hide-after="0"
                   enterable="false"
                 >
-                  <button class="image-button">
+                  <button class="image-button" @click="copyAllMessages">
                     <svg
                       t="1733503137487"
                       class="copy-icon"
@@ -1425,6 +1425,68 @@ export default {
       }
       router.push("/chat/sessionlist");
     };
+
+    // 复制全文功能
+    const copyAllMessages = async () => {
+      try {
+        if (!data.messageList || data.messageList.length === 0) {
+          ElMessage.warning("暂无聊天记录可复制");
+          return;
+        }
+
+        // 构建要复制的文本内容
+        let copyText = `${data.contactInfo.contact_name} 的聊天记录\n`;
+        copyText += `导出时间: ${new Date().toLocaleString()}\n`;
+        copyText += `${"=".repeat(50)}\n\n`;
+
+        data.messageList.forEach((message) => {
+          const time = message.created_at || "";
+          const sender = message.send_name || "未知用户";
+          const content = message.content || "";
+          
+          // 根据消息类型格式化内容
+          let messageContent = "";
+          if (message.type === 1) { // 文本消息
+            messageContent = content;
+          } else if (message.type === 2) { // 文件消息
+            messageContent = `[文件] ${content}`;
+          } else {
+            messageContent = `[其他类型消息] ${content}`;
+          }
+
+          copyText += `${time} ${sender}:\n${messageContent}\n\n`;
+        });
+
+        // 使用现代浏览器的 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(copyText);
+          ElMessage.success("聊天记录已复制到剪贴板");
+        } else {
+          // 兼容旧浏览器的方法
+          const textArea = document.createElement("textarea");
+          textArea.value = copyText;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          textArea.style.top = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          
+          try {
+            document.execCommand('copy');
+            ElMessage.success("聊天记录已复制到剪贴板");
+          } catch (err) {
+            ElMessage.error("复制失败，请手动选择复制");
+          } finally {
+            document.body.removeChild(textArea);
+          }
+        }
+      } catch (error) {
+        console.error("复制失败:", error);
+        ElMessage.error("复制失败，请重试");
+      }
+    };
+
     const preToDeleteContact = () => {
       try {
         ElMessageBox.confirm("确认删除该联系人？", "Warning", {
@@ -2329,6 +2391,7 @@ export default {
       closeAVContainerModal,
       rejectCall,
       endCall,
+      copyAllMessages,
     };
   },
 };

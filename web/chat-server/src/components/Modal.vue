@@ -41,7 +41,8 @@ export default {
   height: 400px;
   border-radius: 20px;
   width: 500px;
-  box-shadow: 0 2px 15px rgb(195, 8, 8);
+  /* box-shadow: 0 2px 15px rgb(195, 8, 8); */
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   align-items: center;

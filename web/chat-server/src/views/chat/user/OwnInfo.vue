@@ -127,6 +127,23 @@
                   <el-form-item prop="signature" label="个性签名">
                     <el-input v-model="updateInfo.signature" placeholder="选填" />
                   </el-form-item>
+                  <el-form-item 
+                    prop="gender" 
+                    label="性别"
+                    :rules="[
+                      {
+                        required: false,
+                        message: '请选择性别',
+                        trigger: 'change',
+                      },
+                    ]"
+                  >
+                    <el-radio-group v-model="updateInfo.gender">
+                      <el-radio :value="0">男</el-radio>
+                      <el-radio :value="1">女</el-radio>
+                      <el-radio :value="2">未设置</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
                   <el-form-item prop="avatar" label="头像">
                     <el-upload
                       v-model:file-list="fileList"
@@ -162,6 +179,7 @@
 import { reactive, toRefs, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import Modal from "@/components/Modal.vue";
 import NavigationModal from "@/components/NavigationModal.vue";
 import ContactListModal from "@/components/ContactListModal.vue";
@@ -188,6 +206,7 @@ export default {
       email: userInfo.email || "",
       birthday: userInfo.birthday || "",
       signature: userInfo.signature || "",
+      gender: userInfo.gender !== undefined ? userInfo.gender : 2, // 默认未设置
       avatar: userInfo.avatar || "",
     });
 
@@ -203,7 +222,14 @@ export default {
     // 打开弹窗时同步数据
     function showMyInfoModal() {
       isMyInfoModalVisible.value = true;
-      Object.assign(updateInfo, userInfo);
+      Object.assign(updateInfo, {
+        nickname: userInfo.nickname || "",
+        email: userInfo.email || "",
+        birthday: userInfo.birthday || "",
+        signature: userInfo.signature || "",
+        gender: userInfo.gender !== undefined ? userInfo.gender : 2,
+        avatar: userInfo.avatar || "",
+      });
       fileList.value = [];
     }
 
@@ -212,6 +238,11 @@ export default {
       // TODO: 这里可以调用接口，提交修改的数据
       // 提交后同步 userInfo
       Object.assign(userInfo, updateInfo);
+      
+      // 更新 store 中的用户信息
+      store.commit('updateUserInfo', updateInfo);
+      
+      ElMessage.success('个人信息更新成功');
       isMyInfoModalVisible.value = false;
     }
 
