@@ -54,10 +54,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // 临时跳过登录验证，开发调试用
-  next()
+  if (!store.state.userInfo.uuid) {
+    if (to.path === '/login' || to.path === '/register' || to.path === '/smsLogin') {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next()
+  }
 })
-
-
 
 export default router
