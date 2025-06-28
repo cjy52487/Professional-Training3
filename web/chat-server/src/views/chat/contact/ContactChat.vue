@@ -1040,7 +1040,7 @@ export default {
       rtcPeerConn: null,
       ICE_CFG: {   iceServers: [
       {
-        urls: "turn:47.111.3.71:3478",
+        urls: "turn:47.115.204.45:3478",
         username: "xfish",
         credential: "qwertyuiop0112",
       },
